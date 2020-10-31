@@ -11,9 +11,9 @@ const dburl = "mongodb://localhost:27017/"
 var db;
 
 // Initialize connection once
-MongoClient.connect(dburl+'/'+dbname, function(err, database) {
+MongoClient.connect(dburl, function(err, client) {
   if(err) throw err;
-  db = database;
+  db = client.db(dbname)
 
   app.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`)
@@ -28,6 +28,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/v1/elements', (req, res) => {
+  console.log(db);
   db.collection('elements')
     .find( { $or : [ {deleted: false}, {deleted: null} ]})
     .sort()
